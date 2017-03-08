@@ -223,12 +223,14 @@ jdbc.url=jdbc:mysql://localhost:3306/database
 jdbc.username=root
 jdbc.password=1234
 ```
+
 ###applicationContext-service.xml
 ```xml
 <!-- 这个文件里暂时只需要定义service的实现类即可 -->
 <!-- 定义service -->
 <bean id="userService" class="com.wxisme.ssm.service.impl.UserServiceImpl"/>
 ```
+
 ###applicationContext-transaction.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -256,8 +258,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     <!-- 配置数据源 -->
     <property name="dataSource" ref="dataSource"/>
-</bean>
-    
+</bean> 
     <!-- 通知 -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
@@ -277,10 +278,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
     <aop:config>
         <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.wxisme.ssm.service.impl.*.*(..))"/>
     </aop:config>
-    
-    
+   
 </beans>
 ```
+
 ##mybatis.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
