@@ -11,17 +11,8 @@
     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
   <display-name></display-name>    
   
-  <!-- 404错误拦截 -->
-  <error-page>
-    <error-code>404</error-code>
-    <location>/error404.jsp</location>
-  </error-page>
-  <!-- 500错误拦截 -->
-  <error-page>
-    <error-code>500</error-code>
-    <location>/error500.jsp</location>
-  </error-page>
-  
+
+ 
   <!-- 加载spring容器 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
