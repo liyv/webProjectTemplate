@@ -1,9 +1,8 @@
 #从业务看SSM整合配置
 
 ##web.xml
->这个文件配置的是哪方面的业务
-```xml   
- 
+
+```html 
   <!-- 加载spring容器 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
