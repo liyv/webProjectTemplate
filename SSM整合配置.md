@@ -160,13 +160,13 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  </beans>
 ```
 
-##application-*.xml
+##applicationContext-*.xml
 ```xml
 <!-- 包含3个配置文件，分别对应数据层控制、业务逻辑service和事务控制 -->
+```
 
-```
-###数据访问层，application-dao.xml
-```
+###数据访问层，applicationContext-dao.xml
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -215,12 +215,95 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 </beans>
 ```
+
 >jdbc.properties
 ```
 jdbc.driver=com.mysql.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/database
 jdbc.username=root
 jdbc.password=1234
+```
+###applicationContext-service.xml
+```xml
+<!-- 这个文件里暂时只需要定义service的实现类即可 -->
+<!-- 定义service -->
+<bean id="userService" class="com.wxisme.ssm.service.impl.UserServiceImpl"/>
+```
+###applicationContext-transaction.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+xmlns:jee="http://www.springframework.org/schema/jee"
+xmlns:aop="http://www.springframework.org/schema/aop"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd">
+    
+<!-- 事务控制  对MyBatis操作数据库  spring使用JDBC事务控制类 -->
+
+<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <!-- 配置数据源 -->
+    <property name="dataSource" ref="dataSource"/>
+</bean>
+    
+    <!-- 通知 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 传播行为 -->
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+            
+            
+        </tx:attributes>
+    </tx:advice>
+    
+    <!-- 配置aop  -->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.wxisme.ssm.service.impl.*.*(..))"/>
+    </aop:config>
+    
+    
+</beans>
+```
+##mybatis.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!-- 将数据库连接数据抽取到属性文件中方便测试 -->
+<!-- <properties resource="/WEB-INF/classes/jdbc.properties"></properties> -->
+<!-- 别名的定义 -->
+<typeAliases>
+    <!-- 批量定义别名 ，指定包名，自动扫描包中的类，别名即为类名，首字母大小写无所谓-->
+    <package name="com.wxisme.ssm.po"/>
+</typeAliases>
+
+<!-- 数据库连接用数据库连接池 -->
+
+<mappers>
+    <!-- 通过扫描包的方式来进行批量加载映射文件 -->
+    <package name="com.wxisme.ssm.mapper"/>
+</mappers>
+</configuration>
 ```
 
 ##pom.xml
